@@ -28,19 +28,30 @@ def adicionar_coluna_ultima_linha(arquivo_entrada, arquivo_saida, nova_coluna):
 
 ###################
 def calcular_media_por_grupo(arquivo):
-    # Carregar o arquivo CSV em um DataFrame do pandas
-    df = pd.read_csv(arquivo, header=None)
+    # Dicionário para armazenar a soma e a contagem de cada grupo
+    soma_por_grupo = {}
+    contagem_por_grupo = {}
 
-    # Definir nomes das colunas
-    df.columns = ['coluna1', 'coluna2', 'coluna3', 'coluna4', 'coluna5', 
-                  'coluna6', 'coluna7', 'coluna8', 'coluna9', 'coluna10',
-                  'coluna11', 'coluna12', 'coluna13', 'coluna14']
+    # Abrir o arquivo
+    with open(arquivo, 'r') as f:
+        # Ler cada linha do arquivo
+        for linha in f:
+            # Dividir a linha em colunas
+            colunas = linha.strip().split(',')
 
-    # Converter a coluna 8 para tipo numérico
-    df['coluna8'] = pd.to_numeric(df['coluna8'], errors='coerce')
+            # Extrair os valores das colunas 8 e 9
+            valor_coluna8 = float(colunas[7])  # Assumindo que a indexação começa em 0
+            valor_coluna9 = colunas[8]  # Assumindo que a indexação começa em 0
 
-    # Calcular a média da coluna 8 agrupada pela coluna 9
-    media_por_grupo = df.groupby('coluna9')['coluna8'].mean()
+            # Atualizar a soma e a contagem para o grupo correspondente
+            soma_por_grupo[valor_coluna9] = soma_por_grupo.get(valor_coluna9, 0) + valor_coluna8
+            contagem_por_grupo[valor_coluna9] = contagem_por_grupo.get(valor_coluna9, 0) + 1
+
+    # Calcular a média para cada grupo
+    media_por_grupo = {}
+    for grupo, soma in soma_por_grupo.items():
+        contagem = contagem_por_grupo[grupo]
+        media_por_grupo[grupo] = soma / contagem
 
     return media_por_grupo
 
