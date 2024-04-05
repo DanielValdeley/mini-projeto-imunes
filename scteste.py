@@ -9,17 +9,17 @@ repeticao = 8
 
 # trafego TCP
 def client_pc1(proto):
-    print("entrou no client_pc1")
+    print("[START]: client_pc1")
     return "sudo himage pc1@i3071 iperf -c 10.0.2.20 -y C -Z " + proto + " >> dados-" + proto + ".csv"
 
 # trafego bg UDP
 def client_pc3(bg):
-    print("entrou no client_pc3")
+    print("[START]: client_pc3")
     return "sudo himage pc3@i3071 iperf -c 10.0.4.20 -u -b " + bg
 
 # trafego bg UDP
 def client_pc4(bg):
-    print("entrou no client_pc4")
+    print("[START]: client_pc4")
     return "sudo himage pc4@i3071 iperf -c 10.0.3.20 -u -b " + bg
 
 for rep in range(repeticao):
