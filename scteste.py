@@ -23,16 +23,15 @@ def client_pc4(bg):
     return "sudo himage pc4@i3071 iperf -c 10.0.3.20 -u -b " + bg
 
 for rep in range(repeticao):
-    print("entrou no rep: ", rep)
+    print("[REP]: ", rep)
     for proto in alg:
-        print("entrou no proto: ", proto)
+        print("[PROTO]: ", proto)
         for ber in BER:
-            print("entrou no ber: ", ber)
+            print("[BER]: ", ber)
             for bg in trafego_bg:
-                print("entrou no bg: ", bg)
+                print("[BG]: ", bg)
                 for e2e in e2e_delay:
-                    print("entrou no e2e: ", e2e)
-                    # configure o link usando o comando vlink
+                    print("[DELAY]: ", e2e)
                     
                     subprocess.run("sudo vlink -BER " + "0" + " pc1:router1@i3071", shell=True)
                     subprocess.run("sudo vlink -BER " + ber + " -d " + e2e + " router1:router2@i3071", shell=True)
@@ -50,6 +49,9 @@ for rep in range(repeticao):
                     subprocess.run("sudo vlink -BER " + ber + " -d " + e2e + " router2:router1@i3071", shell=True)
                     subprocess.run("sudo vlink -BER " + "0" + " router1:pc3@i3071", shell=True)
 
+                    # TCP - reno e cubic
                     subprocess.run(client_pc1(proto), shell=True)
+
+                    # UDP - trafego de background
                     subprocess.run(client_pc3(bg), shell=True)
                     subprocess.run(client_pc4(bg), shell=True)
