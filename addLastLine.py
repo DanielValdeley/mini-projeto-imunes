@@ -21,3 +21,24 @@ def adicionar_coluna_ultima_linha(arquivo_entrada, arquivo_saida, nova_coluna):
         escritor_csv = csv.writer(arquivo_saida)
         for linha in linhas_arquivo:
             escritor_csv.writerow(linha)
+
+
+
+
+
+###################
+def calcular_media_por_grupo(arquivo):
+    # Carregar o arquivo CSV em um DataFrame do pandas
+    df = pd.read_csv(arquivo, header=None)
+
+    # Definir nomes das colunas
+    df.columns = ['timestamp', 'source_ip', 'source_port', 'destination_ip', 'destination_port', 
+                  'protocol', 'interval', 'bytes', 'retransmits', 'bits_per_second']
+
+    # Converter a coluna 'bytes' para tipo numérico
+    df['bytes'] = pd.to_numeric(df['bytes'])
+
+    # Calcular a média da coluna 'bytes' agrupada pela coluna 'retransmits'
+    media_por_grupo = df.groupby('retransmits')['bytes'].mean()
+
+    return media_por_grupo
