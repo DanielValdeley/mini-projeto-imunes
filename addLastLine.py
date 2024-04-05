@@ -32,13 +32,15 @@ def calcular_media_por_grupo(arquivo):
     df = pd.read_csv(arquivo, header=None)
 
     # Definir nomes das colunas
-    df.columns = ['timestamp', 'source_ip', 'source_port', 'destination_ip', 'destination_port', 
-                  'protocol', 'interval', 'bytes', 'retransmits', 'bits_per_second']
+    df.columns = ['coluna1', 'coluna2', 'coluna3', 'coluna4', 'coluna5', 
+                  'coluna6', 'coluna7', 'coluna8', 'coluna9', 'coluna10',
+                  'coluna11', 'coluna12', 'coluna13', 'coluna14']
 
-    # Converter a coluna 'bytes' para tipo numérico
-    df['bytes'] = pd.to_numeric(df['bytes'])
+    # Converter a coluna 8 para tipo numérico
+    df['coluna8'] = pd.to_numeric(df['coluna8'], errors='coerce')
 
-    # Calcular a média da coluna 'bytes' agrupada pela coluna 'retransmits'
-    media_por_grupo = df.groupby('retransmits')['bytes'].mean()
+    # Calcular a média da coluna 8 agrupada pela coluna 9
+    media_por_grupo = df.groupby('coluna9')['coluna8'].mean()
 
     return media_por_grupo
+
