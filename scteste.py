@@ -9,13 +9,6 @@ trafego_bg = ['500', '900']
 repeticao = 8
 
 
-def escrever_no_final_da_ultima_linha(arquivo, texto):
-        with open(arquivo, 'r+') as arquivo:
-            linhas = arquivo.readlines()
-            ultima_linha = linhas[-1]
-            linhas[-1] = ultima_linha + texto + '\n'
-            arquivo.writelines(linhas)
-
 # trafego TCP
 def client_pc1(proto):
     print("[START]: client_pc1")
@@ -80,7 +73,7 @@ for rep in range(repeticao):
 
                     # TCP - reno e cubic
                     subprocess.run(client_pc1(proto), shell=True)
-                    add_coluna_ultima_linha("dados-" + proto + ".csv","dados-" + proto + ".csv", float(rep))
+                    add_coluna_ultima_linha("dados-" + proto + ".csv","dados-" + proto + ".csv", int(rep))
                     add_coluna_ultima_linha("dados-" + proto + ".csv","dados-" + proto + ".csv", proto)
                     add_coluna_ultima_linha("dados-" + proto + ".csv","dados-" + proto + ".csv", float(ber))
                     add_coluna_ultima_linha("dados-" + proto + ".csv","dados-" + proto + ".csv", float(bg))
