@@ -9,31 +9,29 @@ trafego_bg = ['500', '900']
 repeticao = 8
 
 
-def escrever_no_final_da_ultima_linha(arquivo, texto):
-        with open(arquivo, 'r+') as arquivo:
-            linhas = arquivo.readlines()
-            ultima_linha = linhas[-1]
-            linhas[-1] = ultima_linha + texto + '\n'
-            arquivo.writelines(linhas)
-
 # trafego TCP
 def client_pc1(proto):
     print("[START]: client_pc1")
-    return "sudo himage pc1@i3411 iperf -c 10.0.2.20 -y C -Z " + proto + " >> dados-" + proto + ".csv"
+    return "sudo himage pc1@i3cf1 iperf -c 10.0.2.20 -y C -Z " + proto + " >> dados-" + proto + ".csv"
 
 # trafego bg UDP
 def client_pc3(bg):
     print("[START]: client_pc3")
-    return "sudo himage pc3@i3411 iperf -c 10.0.4.20 -u -b " + bg
+    return "sudo himage pc3@i3cf1 iperf -c 10.0.4.20 -u -b " + bg
 
 # trafego bg UDP
 def client_pc4(bg):
     print("[START]: client_pc4")
-    return "sudo himage pc4@i3411 iperf -c 10.0.3.20 -u -b " + bg
+    return "sudo himage pc4@i3cf1 iperf -c 10.0.3.20 -u -b " + bg
 
 def add_coluna(linha, nova_coluna):
         linha.append(nova_coluna)
         return linha
+
+def cabecalho(arquivo_entrada):
+        f = open(arquivo_entrada, "a")
+        f.write("1,2,3,4,5,6,7,8,9,10,11,12,13,14\n")
+        f.close()
 
 def add_coluna_ultima_linha(arquivo_entrada, arquivo_saida, nova_coluna):
     linhas_arquivo = []
@@ -50,7 +48,8 @@ def add_coluna_ultima_linha(arquivo_entrada, arquivo_saida, nova_coluna):
         for linha in linhas_arquivo:
             escritor_csv.writerow(linha)
 
-
+cabecalho("dados-cubic.csv")
+cabecalho("dados-reno.csv")
 for rep in range(repeticao):
     print("[REP]: ", rep)
     for proto in alg:
@@ -62,29 +61,29 @@ for rep in range(repeticao):
                 for e2e in e2e_delay:
                     print("[DELAY]: ", e2e)
                     
-                    subprocess.run("sudo vlink -BER " + "0" + " pc1:router1@i3411", shell=True)
-                    subprocess.run("sudo vlink -BER " + ber + " -d " + e2e + " router1:router2@i3411", shell=True)
-                    subprocess.run("sudo vlink -BER " + "0" + " router2:pc2@i3411", shell=True)
+                    subprocess.run("sudo vlink -BER " + "0" + " pc1:router1@i3cf1", shell=True)
+                    subprocess.run("sudo vlink -BER " + ber + " -d " + e2e + " router1:router2@i3cf1", shell=True)
+                    subprocess.run("sudo vlink -BER " + "0" + " router2:pc2@i3cf1", shell=True)
 
-                    subprocess.run("sudo vlink -BER " + "0" + " pc2:router2@i3411", shell=True)
-                    subprocess.run("sudo vlink -BER " + ber + " -d " + e2e + " router2:router1@i3411", shell=True)
-                    subprocess.run("sudo vlink -BER " + "0" + " router1:pc1@i3411", shell=True)
+                    subprocess.run("sudo vlink -BER " + "0" + " pc2:router2@i3cf1", shell=True)
+                    subprocess.run("sudo vlink -BER " + ber + " -d " + e2e + " router2:router1@i3cf1", shell=True)
+                    subprocess.run("sudo vlink -BER " + "0" + " router1:pc1@i3cf1", shell=True)
 
-                    subprocess.run("sudo vlink -BER " + "0" + " pc3:router1@i3411", shell=True)
-                    subprocess.run("sudo vlink -BER " + ber + " -d " + e2e + " router1:router2@i3411", shell=True)
-                    subprocess.run("sudo vlink -BER " + "0" + " router2:pc4@i3411", shell=True)
+                    subprocess.run("sudo vlink -BER " + "0" + " pc3:router1@i3cf1", shell=True)
+                    subprocess.run("sudo vlink -BER " + ber + " -d " + e2e + " router1:router2@i3cf1", shell=True)
+                    subprocess.run("sudo vlink -BER " + "0" + " router2:pc4@i3cf1", shell=True)
 
-                    subprocess.run("sudo vlink -BER " + "0" + " pc4:router2@i3411", shell=True)
-                    subprocess.run("sudo vlink -BER " + ber + " -d " + e2e + " router2:router1@i3411", shell=True)
-                    subprocess.run("sudo vlink -BER " + "0" + " router1:pc3@i3411", shell=True)
+                    subprocess.run("sudo vlink -BER " + "0" + " pc4:router2@i3cf1", shell=True)
+                    subprocess.run("sudo vlink -BER " + ber + " -d " + e2e + " router2:router1@i3cf1", shell=True)
+                    subprocess.run("sudo vlink -BER " + "0" + " router1:pc3@i3cf1", shell=True)
 
                     # TCP - reno e cubic
                     subprocess.run(client_pc1(proto), shell=True)
-                    add_coluna_ultima_linha("dados-" + proto + ".csv","dados-" + proto + ".csv", float(rep))
+                    add_coluna_ultima_linha("dados-" + proto + ".csv","dados-" + proto + ".csv", int(rep))
                     add_coluna_ultima_linha("dados-" + proto + ".csv","dados-" + proto + ".csv", proto)
-                    add_coluna_ultima_linha("dados-" + proto + ".csv","dados-" + proto + ".csv", float(ber))
-                    add_coluna_ultima_linha("dados-" + proto + ".csv","dados-" + proto + ".csv", float(bg))
-                    add_coluna_ultima_linha("dados-" + proto + ".csv","dados-" + proto + ".csv", float(e2e))
+                    add_coluna_ultima_linha("dados-" + proto + ".csv","dados-" + proto + ".csv", int(ber))
+                    add_coluna_ultima_linha("dados-" + proto + ".csv","dados-" + proto + ".csv", int(bg))
+                    add_coluna_ultima_linha("dados-" + proto + ".csv","dados-" + proto + ".csv", int(e2e))
                     
  
                     # UDP - trafego de background
